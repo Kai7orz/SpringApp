@@ -78,7 +78,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /message/{user_id}:
+  /messages/{user_id}:
     get:
       description: 指定したユーザーID のメッセージをすべて取得する
       responses:
@@ -116,7 +116,7 @@ paths:
           schema:
             type: integer
 
-  /message:
+  /messages:
     post:
       description: ユーザーのメッセージを受け付ける(ユーザーの特定は JWTから行う）
       security:
