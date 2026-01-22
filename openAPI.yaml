@@ -1,0 +1,192 @@
+openapi: 3.1.0
+info:
+  title: Title
+  description: Title
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:8080'
+
+paths:
+  /auth/register:
+    post:
+      summary: RegisterUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        201:
+          description: success registration and return token to login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  id:
+                    type: integer
+                  username:
+                    type: string
+
+        400:
+          description: registration error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+        409:
+          description: registration error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /auth/login:
+    post:
+      summary: LoginUser
+      description: ログイン時に利用する API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        200:
+          description: login successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: JWT を返す
+
+        400:
+          description: login error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /message/{user_id}:
+    get:
+      description: 指定したユーザーID のメッセージをすべて取得する
+      responses:
+        200:
+          description: 配列形式のメッセージ返却
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    message:
+                      type: string
+                    ownerId:
+                      type: integer
+                    createdAt:
+                      type: string
+                      format: date-time
+
+        401:
+          description: 未認証
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+      parameters:
+        - name: user_id
+          description: ユーザーIDの指定
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /message:
+    post:
+      description: ユーザーのメッセージを受け付ける(ユーザーの特定は JWTから行う）
+      security:
+        - BearerAuth: [ ]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+      responses:
+        201:
+          description: メッセージ作成成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  message:
+                    type: string
+                  ownerId:
+                    type: integer
+                  createdAt:
+                    type: string
+                    format: date-time
+        400:
+          description: 不正なリクエスト形式
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: 未認証
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    UserRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          example: user name
+        email:
+          type: string
+          example: example@example.com
+        password:
+          type: string
+          example: password
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: error code
+          example: "VALIDATION_ERROR"
+        message:
+          type: string
+          description: error message
+          example: Invalid input
