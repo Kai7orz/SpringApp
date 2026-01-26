@@ -36,9 +36,7 @@ public class UserRepositoryTest {
     public void should_save_user_success() {
      this.userRepository.save(this.user);
      User receivedUser = this.userRepository.findUserByMail(TEST_USER_EMAIL).orElse(new User("fake","fake","fake"));
-        System.out.println("Equals result: " + this.user.equals(receivedUser));
-        System.out.println("User Email: [" + this.user.getEmail() + "]");
-        System.out.println("Received Email: [" + receivedUser.getEmail() + "]");
      Assertions.assertEquals(receivedUser,this.user);
+     // JdbcTest がデータベースのクリーンアップを自動で行ってくれるので，ロールバックを記述しなくてよい
     }
 }
