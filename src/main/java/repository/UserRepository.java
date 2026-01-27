@@ -35,7 +35,7 @@ public class UserRepository implements core.user.UserRepository {
     public Optional<User> findUserByMail(String email) {
             try{
                 User user = jdbcTemplate.queryForObject(
-                        "SELECT * FROM user WHERE email = ?",
+                        "SELECT * FROM user WHERE email=?",
                         (rs, rowNum) -> {
                             return new User(
                                     rs.getObject("id", Integer.class),
@@ -49,6 +49,7 @@ public class UserRepository implements core.user.UserRepository {
                 );
                 return Optional.ofNullable(user);
             } catch(DataAccessException e){
+                System.out.println("error:"+e);
                 return Optional.empty();
             }
     }
