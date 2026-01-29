@@ -1,17 +1,17 @@
 package repository;
 
 import core.message.Message;
-import core.user.User;
-import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class MessageRepository implements core.message.MessageRepository {
     // jdbc の DI 記述
     // interface の実装
