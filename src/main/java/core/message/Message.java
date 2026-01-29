@@ -1,13 +1,10 @@
 package core.message;
 
 import lombok.Getter;
-import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Optional;
 
-@Repository
 public class Message {
     private Integer messageId;
     private Integer userId;

@@ -1,11 +1,10 @@
 package core.user;
 
-import ch.qos.logback.core.util.StringUtil;
 import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import java.beans.ConstructorProperties;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @EqualsAndHashCode(of = {"email", "password"})
@@ -22,24 +21,39 @@ public class User {
     @Getter
     @NotBlank
     private String password;
+    @Getter
+    private LocalDateTime createdAt;
+    @Getter
+    private String roleName;
 
-    public User (String username,String email,String password) {
-        this(null,null,username,email,password);
+    public User(String username, String email, String password) {
+        this(null, null, username, email, password, LocalDateTime.now(), null);
     }
 
-   public User (Integer id,Integer roleId,String username,String email,String password) {
+    public User(Integer id, Integer roleId, String username, String email, String password) {
+        this(id, roleId, username, email, password, LocalDateTime.now(), null);
+    }
+
+    public User(Integer id, Integer roleId, String username, String email, String password,
+                LocalDateTime createdAt, String roleName) {
         this.id = id;
         this.roleId = roleId;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.createdAt = createdAt;
+        this.roleName = roleName;
     }
 
-    public Optional<Integer> getId(){
+    public Optional<Integer> getId() {
         return Optional.ofNullable(this.id);
     }
 
-    public Optional<Integer> getRoleId(){
+    public Optional<Integer> getRoleId() {
         return Optional.ofNullable(this.roleId);
+    }
+
+    public boolean isAdmin() {
+        return "ADMIN".equals(this.roleName);
     }
 }
